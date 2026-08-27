@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Poppins } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -16,9 +16,14 @@ import { getLocale } from "@/lib/locale-server";
 
 // Sober-style geometric sans. Three weights cover display, body and captions —
 // one family instead of two also halves the font payload.
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
+// Self-hosted (same Poppins faces next/font/google would fetch) so builds and
+// the PWA never depend on fonts.googleapis.com at request time.
+const poppins = localFont({
+  src: [
+    { path: "../fonts/poppins-latin-300-normal.woff2", weight: "300", style: "normal" },
+    { path: "../fonts/poppins-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/poppins-latin-500-normal.woff2", weight: "500", style: "normal" },
+  ],
   variable: "--font-poppins",
   display: "swap",
   preload: true,
@@ -54,6 +59,13 @@ export const metadata: Metadata = {
     description: "Contemporary fashion house rooted in Douala, Cameroon.",
     type: "website",
     locale: "en_GB",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "OSSZ Collections" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OSSZ Collections",
+    description: "Contemporary fashion house rooted in Douala, Cameroon.",
+    images: ["/og-image.png"],
   },
 };
 

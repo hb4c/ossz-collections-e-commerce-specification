@@ -22,7 +22,9 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     // Editorial photography tolerates a lower quality floor than the default 75
     // with no visible loss, and it is the single biggest byte saving on mobile.
-    qualities: [58, 65, 75],
+    // Must include every quality the components request, or the optimizer
+    // rejects those requests with a 400 (broken images in production).
+    qualities: [45, 55, 58, 60, 62, 65, 68, 75],
     // Remote editorial images are immutable once published.
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },

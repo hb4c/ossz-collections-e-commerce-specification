@@ -32,6 +32,17 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  /* Installed-PWA safe areas (viewport-fit=cover). env() is 0 in regular
+     browser windows, so the visual design is unchanged there; on notched
+     devices in standalone mode this keeps content clear of the notch. */
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* The sticky header slides under a notched status bar in standalone mode;
+   pad it by the top inset only there. */
+body > header {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 ::selection {
