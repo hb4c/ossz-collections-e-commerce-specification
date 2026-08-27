@@ -9,8 +9,14 @@
  * HTML is therefore NEVER cached now. Only content-hashed build assets and
  * optimised images are cached, plus the offline page as a fallback. Those are
  * immutable, so they can never go stale in a harmful way.
+ *
+ * The offline page is cached together with the subresources it references
+ * (CSS, JS chunks, self-hosted fonts), so the fallback always renders fully
+ * styled even on a device that has never loaded a page before going offline.
+ * It is only ever served when the network genuinely fails — never as a cached
+ * navigation response — so it cannot go stale in a harmful way either.
  */
-const VERSION = "ossz-v5";
+const VERSION = "ossz-v6";
 const STATIC_CACHE = `${VERSION}-static`;
 const IMAGE_CACHE = `${VERSION}-images`;
 const OFFLINE_URL = "/offline";
@@ -20,10 +26,40 @@ const NEVER = [/^\/api\//, /^\/admin/, /^\/account/, /^\/checkout/, /^\/cart/, /
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(STATIC_CACHE)
-      .then((c) => c.addAll([OFFLINE_URL, "/manifest.webmanifest"]).catch(() => {}))
-      .then(() => self.skipWaiting()),
+    (async () => {
+      const cache = await caches.open(STATIC_CACHE);
+      // Brand icons are tiny and immutable per cache version; having them in
+      // the precache means the installed app never waits on them.
+      await cache.addAll(["/manifest.webmanifest", "/icons/icon-192.png", "/icons/icon-512.png"]).catch(() => {});
+
+      try {
+        const res = await fetch(OFFLINE_URL, { cache: "no-store", credentials: "omit" });
+        if (res.ok) {
+          await cache.put(OFFLINE_URL, res.clone());
+          // Precache the hashed build assets the offline page references so the
+          // fallback is fully styled offline, even on a cold install. The quoted
+          // matcher covers both <link>/<script> tags and the RSC flight hints
+          // (":HL[…]") that carry the font preloads — everything under
+          // /_next/static is content-hashed and immutable, so caching is safe.
+          const html = await res.text();
+          const assets = new Set();
+          for (const m of html.matchAll(/\\?"(\/_next\/static\/[^"\\]+?)\\?"/g)) {
+            assets.add(m[1]);
+          }
+          await Promise.all(
+            [...assets].map((url) =>
+              fetch(url, { cache: "no-store" })
+                .then((r) => (r.ok ? cache.put(url, r) : undefined))
+                .catch(() => {}),
+            ),
+          );
+        }
+      } catch {
+        /* offline already, or the server is unreachable — next install retry will fill it */
+      }
+
+      await self.skipWaiting();
+    })(),
   );
 });
 
