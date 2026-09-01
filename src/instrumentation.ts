@@ -7,9 +7,8 @@ export async function register() {
   if (process.env.OSSZ_SKIP_BOOTSTRAP === "1") return;
   const { bootstrap } = await import("@/lib/bootstrap");
 
-  // Fire-and-forget. `register()` is awaited by Next before the server begins
-  // serving, so awaiting a seed run here would delay startup — and a slow or
-  // unreachable database would hold the whole site down. Recovery is a
-  // background concern; serving pages is not.
-  void bootstrap().catch(() => {});
+  // Complete setup before requests are served. `bootstrap` handles connection
+  // and schema errors internally, so a database outage still cannot crash the
+  // server while an empty connected database is ready for the first request.
+  await bootstrap();
 }

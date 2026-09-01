@@ -1,11 +1,12 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
-const databaseUrl = process.env.DATABASE_URL;
-
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL is required");
-}
+// Keep module initialization safe when the preview starts before the
+// integration environment has been injected. Queries will still use the
+// connected Neon URL whenever DATABASE_URL is available.
+const databaseUrl =
+  process.env.DATABASE_URL ||
+  "postgresql://postgres:postgres@127.0.0.1:5432/app_db";
 
 /**
  * Managed Postgres providers (Neon, Supabase, Vercel Postgres) require TLS,
