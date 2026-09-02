@@ -63,8 +63,12 @@ export function HeaderNav({
           <span className="mt-[6px] block h-px w-4 bg-ink" />
         </button>
 
-        <Link href="/" className="display text-xl md:text-2xl tracking-[0.22em] uppercase">
-          OSSZ<span className="text-accent">.</span>
+        <Link href="/" aria-label="OSSZ Collections home" className="inline-flex items-center">
+          <img
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Ossz%20Short%20Logo-xJ9dwOJQbmLcvzXLnJZwXRYREpdudl.png"
+            alt="OSSZ Collections"
+            className="h-auto w-24 object-contain"
+          />
         </Link>
 
         <nav className="hidden md:flex items-center gap-7 text-[0.78rem] tracking-[0.14em] uppercase">

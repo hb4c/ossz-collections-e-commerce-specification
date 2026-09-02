@@ -19,10 +19,17 @@ export async function SiteHeader() {
   );
 }
 
+const OSSZ_LOGO_URL =
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Ossz%20Short%20Logo-xJ9dwOJQbmLcvzXLnJZwXRYREpdudl.png";
+
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
-    <Link href="/" className={`display text-2xl tracking-[0.18em] uppercase ${className}`}>
-      OSSZ<span className="text-accent">.</span>
+    <Link href="/" aria-label="OSSZ Collections home" className={`inline-flex items-center ${className}`}>
+      <img
+        src={OSSZ_LOGO_URL}
+        alt="OSSZ Collections"
+        className="h-auto w-24 object-contain"
+      />
     </Link>
   );
 }
