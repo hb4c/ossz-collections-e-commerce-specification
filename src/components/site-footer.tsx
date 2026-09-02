@@ -16,7 +16,7 @@ export async function SiteFooter() {
           <p className="mt-4 text-sm leading-relaxed text-ink-soft">
             {t(locale, "footer.tag")}
           </p>
-          <p className="mt-4 text-sm text-muted">{settings.store_address}</p>
+          <p className="mt-4 text-sm text-muted">            Carrefour Pandaison, behind ESSEC, Ange Raphael, — Douala, Cameroon</p>
           <p className="mt-1 text-sm text-muted">{settings.business_hours}</p>
         </div>
 

@@ -19,7 +19,7 @@ export default async function ContactPage() {
           {t(locale, "contact.intro")}
         </p>
         <dl className="mt-8 space-y-5 text-sm">
-          <div><dt className="eyebrow">{t(locale, "contact.boutique")}</dt><dd className="mt-1 text-ink-soft">{settings.store_address}</dd></div>
+          <div><dt className="eyebrow">{t(locale, "contact.boutique")}</dt><dd className="mt-1 text-ink-soft">Carrefour Pandaison, behind ESSEC, Ange Raphael, — Douala, Cameroon</dd></div>
           <div><dt className="eyebrow">{t(locale, "contact.hours")}</dt><dd className="mt-1 text-ink-soft">{settings.business_hours}</dd></div>
           <div><dt className="eyebrow">{t(locale, "contact.email")}</dt><dd className="mt-1 text-ink-soft">{settings.contact_email}</dd></div>
           <div><dt className="eyebrow">{t(locale, "contact.wa")}</dt><dd className="mt-1 text-ink-soft">{settings.whatsapp_number}</dd></div>

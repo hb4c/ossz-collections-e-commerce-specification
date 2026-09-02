@@ -19,16 +19,13 @@ export async function SiteHeader() {
   );
 }
 
-const OSSZ_LOGO_URL =
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Ossz%20Short%20Logo-xJ9dwOJQbmLcvzXLnJZwXRYREpdudl.png";
-
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
     <Link href="/" aria-label="OSSZ Collections home" className={`inline-flex items-center ${className}`}>
       <img
-        src={OSSZ_LOGO_URL}
+        src="/ossz-short-logo.png"
         alt="OSSZ Collections"
-        className="h-auto w-24 object-contain"
+        className="h-auto w-40 object-contain"
       />
     </Link>
   );
