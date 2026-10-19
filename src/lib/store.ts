@@ -407,7 +407,16 @@ export const SETTING_DEFAULTS: Record<string, string> = {
  * itself on a single render. `cache()` collapses them to one query per request.
  */
 const loadSettings = unstable_cache(
-  async () => db.select().from(settings),
+  async () => {
+    try {
+      return await db.select().from(settings);
+    } catch (error) {
+      // A partially migrated database should still render with safe defaults;
+      // bootstrap repairs the missing table on the next startup.
+      console.warn(`[ossz] settings read skipped: ${String(error).slice(0, 200)}`);
+      return [];
+    }
+  },
   ["ossz-settings"],
   { tags: ["settings"] },
 );

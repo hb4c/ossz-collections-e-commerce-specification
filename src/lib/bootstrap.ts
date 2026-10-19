@@ -57,7 +57,16 @@ export async function bootstrap(): Promise<void> {
       }
     }
 
-    if (hasProducts) return; // already populated — nothing to do
+    // Older databases may have the catalogue tables but not the settings table.
+    // Keep bootstrap self-healing instead of skipping repair because products exist.
+    await pool.query(`
+      create table if not exists settings (
+        key text primary key,
+        value text not null default ''
+      )
+    `);
+
+    if (hasProducts) return; // already populated — nothing else to seed
 
     // 2. Seed. Each script is idempotent and self-contained.
     console.log("[ossz] seeding catalogue and reference data");
